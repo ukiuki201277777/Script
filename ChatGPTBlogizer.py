@@ -47,10 +47,24 @@ def add_tags(character, text):
             return message_tag 
     else:
         return text + '\n' 
-    
-with open('input.txt', 'r', encoding='utf-8') as input_file:
-    lines = input_file.readlines()
 
+# character escape    
+def parse_special_characters(text):
+    text = text.replace("&", "&amp;")
+    text = text.replace("<", "&lt;")
+    text = text.replace(">", "&gt;")
+    text = text.replace('"', "&quot;")
+    text = text.replace("'", "&#39;")
+    return text
+
+with open('input.txt', 'r', encoding='utf-8') as input_file:
+    contents = input_file.read()
+
+# parse
+parsed_contents = parse_special_characters(contents)
+
+# main
+lines = parsed_contents.split("\n")
 output_text = ""
 current_character = ""
 for line in lines:
@@ -70,7 +84,6 @@ for line in lines:
     else:
         output_text += add_tags("", line)
 
-# 5/26/2023 Added     
 output_text = output_text + "</pre>"
 output_lines = output_text.split("\n")
 output_text = "\n".join(output_lines[1:])
