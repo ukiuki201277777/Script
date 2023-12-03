@@ -1,10 +1,12 @@
 # 右クリックしたらファイル名がクリップボードにコピーされるので、メモ帳などにコピペ
 # When you right-click, the file name is copied to the clipboard, so you can paste it into applications like Notepad.
 #
+# 画像ビューアを作成する
 from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import filedialog
 import os
+import pyperclip  # Import the pyperclip module for clipboard operations
 
 class ImageViewer:
     def __init__(self, root):
@@ -31,6 +33,9 @@ class ImageViewer:
 
         self.file_path_label = Label(self.root, text="ファイルパス: ")
         self.file_path_label.pack()
+
+        # Bind right-click event to the label
+        self.label.bind("<Button-3>", self.copy_image_path_to_clipboard)
 
     def choose_folder(self):
         self.image_folder = filedialog.askdirectory()
@@ -62,6 +67,10 @@ class ImageViewer:
         self.current_image_index = (self.current_image_index + 1) % len(self.images)
         self.load_image()  # Reload the image when showing the next one
 
+    def copy_image_path_to_clipboard(self, event):
+        image_path = os.path.join(self.image_folder, self.images[self.current_image_index])
+        pyperclip.copy(image_path)  # Copy the image path to the clipboard
+
     def get_file_name(self):
         return self.images[self.current_image_index]
 
@@ -72,3 +81,4 @@ if __name__ == "__main__":
     viewer = ImageViewer(root)
 
     root.mainloop()
+
